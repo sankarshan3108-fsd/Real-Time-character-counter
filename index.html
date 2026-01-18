@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Glass Wave Character Counter</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Poppins",sans-serif;
+}
+
+/* 🌊 MOVING WAVES BACKGROUND */
+body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#0f2027;
+    overflow:hidden;
+}
+
+body::before,
+body::after{
+    content:"";
+    position:absolute;
+    width:200%;
+    height:200%;
+    background:radial-gradient(circle at 50% 50%,
+        rgba(255,255,255,0.08),
+        transparent 60%);
+    animation:wave 18s linear infinite;
+}
+
+body::after{
+    animation-duration:25s;
+    opacity:0.6;
+}
+
+@keyframes wave{
+    0%{transform:translateX(0) translateY(0);}
+    50%{transform:translateX(-25%) translateY(-15%);}
+    100%{transform:translateX(0) translateY(0);}
+}
+
+/* 🧊 GLASS CARD */
+.card{
+    width:420px;
+    padding:30px;
+    border-radius:22px;
+    background:rgba(255,255,255,0.12);
+    backdrop-filter:blur(25px);
+    -webkit-backdrop-filter:blur(25px);
+    border:1px solid rgba(255,255,255,0.25);
+    box-shadow:0 30px 80px rgba(0,0,0,0.45);
+    color:#fff;
+    z-index:2;
+    animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-8px);}
+}
+
+/* HEADER */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.header h2{
+    font-weight:600;
+    letter-spacing:1px;
+}
+
+.toggle{
+    cursor:pointer;
+    font-size:22px;
+}
+
+/* INPUT FIELD */
+.field{
+    position:relative;
+    margin-top:25px;
+}
+
+textarea{
+    width:100%;
+    min-height:120px;
+    resize:none;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.25);
+    border-radius:16px;
+    padding:16px;
+    color:#fff;
+    font-size:15px;
+    outline:none;
+    transition:0.3s;
+}
+
+textarea:focus{
+    box-shadow:0 0 25px rgba(112,161,255,0.6);
+}
+
+label{
+    position:absolute;
+    top:16px;
+    left:16px;
+    color:rgba(255,255,255,0.6);
+    pointer-events:none;
+    transition:0.3s;
+}
+
+textarea:focus + label,
+textarea:not(:placeholder-shown) + label{
+    top:-8px;
+    font-size:12px;
+    background:rgba(15,32,39,0.8);
+    padding:0 6px;
+    border-radius:6px;
+}
+
+/* STATS */
+.stats{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:15px;
+}
+
+.counter{
+    font-size:14px;
+}
+
+.emoji{
+    font-size:22px;
+    transition:0.3s;
+}
+
+/* PROGRESS RING */
+.progress{
+    display:flex;
+    justify-content:center;
+    margin-top:20px;
+}
+
+svg{
+    transform:rotate(-90deg);
+}
+
+circle{
+    fill:none;
+    stroke-width:10;
+    stroke-linecap:round;
+}
+
+.bg{
+    stroke:rgba(255,255,255,0.2);
+}
+
+.fg{
+    stroke:#70a1ff;
+    stroke-dasharray:283;
+    stroke-dashoffset:283;
+    transition:0.4s;
+}
+
+/* WARNING */
+.warning{
+    text-align:center;
+    margin-top:12px;
+    font-size:14px;
+    color:#ff6b6b;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <div class="header">
+        <h2>Message Box</h2>
+        <div class="toggle" id="mode">🌙</div>
+    </div>
+
+    <div class="field">
+        <textarea id="text" placeholder=" "></textarea>
+        <label>Type your message...</label>
+    </div>
+
+    <div class="stats">
+        <div class="counter" id="counter">0 / 200</div>
+        <div class="emoji" id="emoji">😄</div>
+    </div>
+
+    <div class="progress">
+        <svg width="90" height="90">
+            <circle class="bg" cx="45" cy="45" r="45"></circle>
+            <circle class="fg" cx="45" cy="45" r="45" id="circle"></circle>
+        </svg>
+    </div>
+
+    <div class="warning" id="warn">Character limit reached!</div>
+</div>
+
+<script>
+const textarea=document.getElementById("text");
+const counter=document.getElementById("counter");
+const circle=document.getElementById("circle");
+const warn=document.getElementById("warn");
+const emoji=document.getElementById("emoji");
+
+const max=200;
+const circumference=283;
+
+textarea.addEventListener("input",()=>{
+    textarea.style.height="auto";
+    textarea.style.height=textarea.scrollHeight+"px";
+
+    let len=textarea.value.length;
+
+    if(len>max){
+        textarea.value=textarea.value.slice(0,max);
+        len=max;
+        warn.style.display="block";
+    }else{
+        warn.style.display="none";
+    }
+
+    counter.textContent=`${len} / ${max}`;
+    circle.style.strokeDashoffset=circumference-(len/max)*circumference;
+
+    if(len<100) emoji.textContent="😄";
+    else if(len<160) emoji.textContent="😐";
+    else emoji.textContent="😡";
+});
+</script>
+
+</body>
+</html>
