@@ -33,7 +33,7 @@ Simple and user-friendly UI
 <img width="801" height="788" alt="image" src="https://github.com/user-attachments/assets/a3d0e741-f935-4ae8-bdac-14b06d9fa0c8" />
 
 🌐 Live Demo
-https://your-username.github.io/real-time-character-counter/
+ https://sankarshan3108-fsd.github.io/Real-Time-character-counter/
 
 🛠️ Technologies Used
 HTML
